@@ -2,11 +2,16 @@ import type { WardrobeItem } from "./types";
 
 /**
  * 搭配出图：把几件单品排版到白底画布，底部带合并色卡，
- * 仿日系杂志平铺图。输出 1200×1500 PNG。
+ * 仿日系杂志平铺图。画布逻辑尺寸 1200×1500。
+ *
+ * 拆成 layoutOutfit（算位置）+ drawOutfit（画）两层，
+ * 供 OutfitCanvas 拖动后实时重绘；composeOutfitImage 是一次性出图。
  */
 
-const W = 1200;
-const H = 1500;
+export const OUTFIT_W = 1200;
+export const OUTFIT_H = 1500;
+
+export type Placement = { x: number; y: number; w: number; h: number };
 
 /** [x, y, w] 相对画布宽度的比例，按件数给固定杂志式布局 */
 const LAYOUTS: Record<number, [number, number, number][]> = {
@@ -69,41 +74,54 @@ export function mergeColors(items: WardrobeItem[]): string[] {
   return out;
 }
 
-export async function composeOutfitImage(
+/** 加载单品图并计算初始摆放位置 */
+export async function layoutOutfit(
   items: WardrobeItem[],
-  { withDots = true }: { withDots?: boolean } = {},
-): Promise<Blob> {
-  const canvas = document.createElement("canvas");
-  canvas.width = W;
-  canvas.height = H;
-  const ctx = canvas.getContext("2d")!;
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, W, H);
-
-  const layout = LAYOUTS[items.length] ?? gridLayout(items.length);
+): Promise<{ imgs: HTMLImageElement[]; placements: Placement[] }> {
   const imgs = await Promise.all(items.map((i) => loadImage(i.image_url)));
-  const maxH = H * 0.42;
+  const layout = LAYOUTS[items.length] ?? gridLayout(items.length);
+  const maxH = OUTFIT_H * 0.42;
 
-  imgs.forEach((img, i) => {
+  const placements = imgs.map((img, i) => {
     const [fx, fy, fw] = layout[i];
-    const w = fw * W;
+    const w = fw * OUTFIT_W;
     let dw = w;
     let dh = w * (img.naturalHeight / img.naturalWidth);
     if (dh > maxH) {
       dh = maxH;
       dw = dh * (img.naturalWidth / img.naturalHeight);
     }
-    ctx.drawImage(img, fx * W + (w - dw) / 2, fy * H, dw, dh);
+    return { x: fx * OUTFIT_W + (w - dw) / 2, y: fy * OUTFIT_H, w: dw, h: dh };
+  });
+  return { imgs, placements };
+}
+
+/** 按当前位置把单品画到画布上（白底 + 底部色点排） */
+export function drawOutfit(
+  canvas: HTMLCanvasElement,
+  imgs: HTMLImageElement[],
+  placements: Placement[],
+  items: WardrobeItem[],
+  withDots = true,
+): void {
+  canvas.width = OUTFIT_W;
+  canvas.height = OUTFIT_H;
+  const ctx = canvas.getContext("2d")!;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, OUTFIT_W, OUTFIT_H);
+
+  imgs.forEach((img, i) => {
+    const p = placements[i];
+    ctx.drawImage(img, p.x, p.y, p.w, p.h);
   });
 
   // 色点排（左下，贴近底边——与弹窗里"删除这件单品"同一水平位）
-  // withDots=false 时跳过：存进穿搭库的图不烘色点，色点由界面用 HTML 渲染
   if (withDots) {
     const colors = mergeColors(items);
     const dotR = 16;
     const gap = 42;
-    const x0 = W * 0.07;
-    const y = H * 0.955;
+    const x0 = OUTFIT_W * 0.07;
+    const y = OUTFIT_H * 0.955;
     colors.forEach((c, i) => {
       ctx.beginPath();
       ctx.arc(x0 + i * gap, y, dotR, 0, Math.PI * 2);
@@ -114,6 +132,16 @@ export async function composeOutfitImage(
       ctx.stroke();
     });
   }
+}
+
+/** 一次性出图（导出/入库用） */
+export async function composeOutfitImage(
+  items: WardrobeItem[],
+  { withDots = true }: { withDots?: boolean } = {},
+): Promise<Blob> {
+  const canvas = document.createElement("canvas");
+  const { imgs, placements } = await layoutOutfit(items);
+  drawOutfit(canvas, imgs, placements, items, withDots);
 
   return new Promise((resolve, reject) =>
     canvas.toBlob(
