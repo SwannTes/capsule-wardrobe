@@ -76,7 +76,19 @@ create policy "allow anon delete images" on storage.objects for delete to anon u
 
 > 说明：anon key 本身就是「公开给浏览器用」的 key，以上策略意味着知道项目地址的人都能读写。个人自用没问题；要多人/公网使用再加认证。穿搭图存在同一个桶的 `outfits/` 前缀下，策略天然覆盖。
 
-## 部署 Vercel
+## 部署现状（2026-10-14 已上线）
+
+- GitHub 仓库：`SwannTes/capsule-wardrobe`（private）
+- Vercel 项目：`capsule-wardrobe`（team swanntes-projects，项目级「Vercel Authentication」部署保护已关闭）
+- 线上域名：`wardrobe.swann.com.cn`（⚠️ `*.vercel.app` 默认域名在国内被 DNS 污染 + SNI 阻断，不可用，必须走自定义域名）
+- 生产环境变量（Vercel 后台已配）：`NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- 日常更新：`git add -A && git commit && git push`，然后 `npx vercel deploy --prod --yes`（CLI 登录态在本机；也可在 Vercel 后台把 GitHub 仓库接上自动部署）
+
+**改代码后的上线步骤**：本地 `npm run build` 验证 → commit+push → `npx vercel deploy --prod --yes`。
+
+**换机/首次配置**：`npx vercel login --github`（浏览器授权一次）→ 项目目录 `npx vercel link --yes --project capsule-wardrobe`。
+
+## 从零手动部署（参考）
 
 1. 推到 GitHub：`git init && git add -A && git commit -m "init"`，建仓库后 push。
 2. Vercel → Import Project → 选仓库，Framework 自动识别 Next.js。
