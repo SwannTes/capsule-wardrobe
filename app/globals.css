@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #faf9f7;
+  --color-card: #ffffff;
+  --color-ink: #1c1b1a;
+  --color-muted: #8a8680;
+  --color-line: #e8e5e0;
+
+  /* 字号整体放大 150%（行高是比例值，自动跟随） */
+  --text-xs: 1.125rem; /* 12 → 18px */
+  --text-sm: 1.3125rem; /* 14 → 21px */
+  --text-base: 1.5rem; /* 16 → 24px */
+  --text-lg: 1.6875rem; /* 18 → 27px */
+  --text-xl: 1.875rem; /* 20 → 30px */
+}
+
+html {
+  background: var(--color-paper);
+}
+
+body {
+  color: var(--color-ink);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+    "Noto Sans CJK SC", "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* 日系画册式衬线标题：优先调用系统中文字体，不依赖网络字体 */
+.font-serif-jp {
+  font-family:
+    "Hiragino Mincho ProN", "YuMincho", "Yu Mincho", "Songti SC",
+    "Noto Serif CJK SC", "Source Han Serif SC", serif;
+}
