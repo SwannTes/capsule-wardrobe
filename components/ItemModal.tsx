@@ -204,12 +204,12 @@ export default function ItemModal({
             <div className="flex w-3/5 shrink-0 flex-col">
               <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
                 <p className="font-serif-jp text-base">{item.name || "未命名单品"}</p>
-                {/* 主图高度用视口定值：flex 里写百分比会和 max-h-full 形成循环计算把高度撑爆 */}
+                {/* 主图高度用视口定值：flex 里写百分比会和 max-h-full 形成循环计算把高度撑爆；self-start 贴左，左边距≈原来一半 */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={item.image_url}
                   alt={item.name || "单品"}
-                  className="mx-auto mt-4 max-h-[57vh] max-w-full object-contain"
+                  className="mt-4 max-h-[57vh] max-w-full self-start object-contain"
                 />
                 <div className="mt-4 flex justify-center gap-3">
                   {item.colors.map((c) => (
