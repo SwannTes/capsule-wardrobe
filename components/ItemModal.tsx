@@ -197,7 +197,7 @@ export default function ItemModal({
       >
         {/* 同一个白色背景框：宽高比 0.94（对齐参考图白板比例）；左 3/5 宽——名称+主图+色点垂直居中，删除按钮收在左列底部；右 2/5 宽——穿搭图贴满整列、底部对齐删除行（图内色点落在同一水平线） */}
         <div
-          className="border border-line bg-card p-6"
+          className="border border-line bg-card p-6 pr-2.5"
           style={{ width: "min(92vw, 91vh)", aspectRatio: "1260 / 1280" }}
         >
           {/* 左列按主图实际宽度占位、右列吃掉剩余全部宽度，两列间距固定 10px */}
@@ -257,7 +257,7 @@ export default function ItemModal({
                   key={outfits[0].id}
                   src={outfits[0].image_url}
                   alt="穿搭图"
-                  className="max-h-full max-w-full origin-bottom scale-[2.25] object-contain"
+                  className="h-full w-full object-cover object-[right_bottom]"
                 />
               )}
             </button>
