@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { getSupabase } from "@/lib/supabase";
 import type { WardrobeItem } from "@/lib/types";
+import { drawOutfit, type Placement } from "@/lib/compose";
 import OutfitCanvas from "./OutfitCanvas";
 import OutfitLibrary from "./OutfitLibrary";
 
@@ -18,6 +19,11 @@ export default function OutfitStudio({ items }: { items: WardrobeItem[] }) {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
   const [libraryOpen, setLibraryOpen] = useState(false);
+  // 画布当前布局（含拖动后的位置），入库时用它重绘无色点版本
+  const layoutRef = useRef<{
+    imgs: HTMLImageElement[];
+    placements: Placement[];
+  } | null>(null);
 
   function toggle(item: WardrobeItem) {
     setSelected((prev) =>
@@ -98,7 +104,18 @@ export default function OutfitStudio({ items }: { items: WardrobeItem[] }) {
     setBusy(true);
     setError("");
     try {
-      const blob = await exportCanvasBlob();
+      // 入穿搭库的图不烘色点（弹窗里不显示色卡），用画布当前布局（含拖动位置）重绘；
+      // 导出分享图仍带色点
+      const layout = layoutRef.current;
+      if (!layout) throw new Error("画布还没准备好");
+      const off = document.createElement("canvas");
+      drawOutfit(off, layout.imgs, layout.placements, selected, false);
+      const blob = await new Promise<Blob>((resolve, reject) =>
+        off.toBlob(
+          (b) => (b ? resolve(b) : reject(new Error("出图失败"))),
+          "image/png",
+        ),
+      );
       await saveOutfit(blob, selected.map((i) => i.id));
       setSaved(true);
     } catch (e) {
@@ -220,7 +237,10 @@ export default function OutfitStudio({ items }: { items: WardrobeItem[] }) {
         <OutfitCanvas
           items={selected}
           canvasRef={canvasRef}
-          onReady={() => setCanvasReady(true)}
+          onReady={(layout) => {
+            layoutRef.current = layout;
+            setCanvasReady(true);
+          }}
         />
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
           <button

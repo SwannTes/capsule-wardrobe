@@ -238,11 +238,11 @@ export default function ItemModal({
               </div>
             </div>
 
-            {/* 右侧：只显示一张推荐穿搭（贴底对齐），点击进图库选择器可更换 */}
+            {/* 右侧：只显示一张推荐穿搭（贴底+放大 1.5 倍，两侧白边裁掉），点击进图库选择器可更换 */}
             <button
               onClick={openPicker}
               disabled={uploading}
-              className={`flex h-full min-w-0 flex-1 flex-col items-center justify-end transition-colors ${
+              className={`flex h-full min-w-0 flex-1 flex-col items-center justify-end overflow-hidden transition-colors ${
                 uploading ? "opacity-40" : ""
               }`}
             >
@@ -257,7 +257,7 @@ export default function ItemModal({
                   key={outfits[0].id}
                   src={outfits[0].image_url}
                   alt="穿搭图"
-                  className="max-h-full max-w-full object-contain"
+                  className="max-h-full max-w-full origin-bottom scale-150 object-contain"
                 />
               )}
             </button>

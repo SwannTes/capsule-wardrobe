@@ -21,7 +21,10 @@ export default function OutfitCanvas({
 }: {
   items: WardrobeItem[];
   canvasRef: RefObject<HTMLCanvasElement | null>;
-  onReady: () => void;
+  onReady: (layout: {
+    imgs: HTMLImageElement[];
+    placements: Placement[];
+  }) => void;
 }) {
   const [state, setState] = useState<{
     imgs: HTMLImageElement[];
@@ -43,7 +46,7 @@ export default function OutfitCanvas({
   useEffect(() => {
     if (!state || !canvasRef.current) return;
     drawOutfit(canvasRef.current, state.imgs, state.placements, items, true);
-    onReady();
+    onReady(state); // 把当前布局（含拖动后的位置）同步给父组件，入库时重绘无色点版
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
