@@ -209,7 +209,7 @@ export default function ItemModal({
                 <img
                   src={item.image_url}
                   alt={item.name || "单品"}
-                  className="mx-auto mt-4 max-h-[38vh] max-w-full object-contain"
+                  className="mx-auto mt-4 max-h-[57vh] max-w-full object-contain"
                 />
                 <div className="mt-4 flex justify-center gap-3">
                   {item.colors.map((c) => (
