@@ -8,8 +8,9 @@ import type { WardrobeItem } from "./types";
  * 供 OutfitCanvas 拖动后实时重绘；composeOutfitImage 是一次性出图。
  */
 
+/** 画布逻辑尺寸 1200×1280（宽高比 0.94，对齐日系杂志参考图的白板比例） */
 export const OUTFIT_W = 1200;
-export const OUTFIT_H = 1500;
+export const OUTFIT_H = 1280;
 
 export type Placement = { x: number; y: number; w: number; h: number };
 
@@ -80,7 +81,7 @@ export async function layoutOutfit(
 ): Promise<{ imgs: HTMLImageElement[]; placements: Placement[] }> {
   const imgs = await Promise.all(items.map((i) => loadImage(i.image_url)));
   const layout = LAYOUTS[items.length] ?? gridLayout(items.length);
-  const maxH = OUTFIT_H * 0.42;
+  const maxH = OUTFIT_H * 0.5;
 
   const placements = imgs.map((img, i) => {
     const [fx, fy, fw] = layout[i];

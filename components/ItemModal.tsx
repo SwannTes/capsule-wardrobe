@@ -195,9 +195,12 @@ export default function ItemModal({
         className="flex min-h-full flex-col items-center justify-center px-5 py-16"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* 同一个白色背景框：定高 68vh；左 3/5 宽——名称+主图（占框高 60%）+色点垂直居中，删除按钮收在左列底部；右 2/5 宽——穿搭图贴满整列、底部对齐删除行（图内色点落在同一水平线） */}
-        <div className="w-full max-w-5xl border border-line bg-card p-6">
-          <div className="flex h-[68vh] flex-row gap-4">
+        {/* 同一个白色背景框：宽高比 0.94（对齐参考图白板比例）；左 3/5 宽——名称+主图+色点垂直居中，删除按钮收在左列底部；右 2/5 宽——穿搭图贴满整列、底部对齐删除行（图内色点落在同一水平线） */}
+        <div
+          className="border border-line bg-card p-6"
+          style={{ width: "min(92vw, 62vh)", aspectRatio: "1200 / 1280" }}
+        >
+          <div className="flex h-full flex-row gap-4">
             <div className="flex w-3/5 shrink-0 flex-col">
               <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
                 <p className="font-serif-jp text-base">{item.name || "未命名单品"}</p>
