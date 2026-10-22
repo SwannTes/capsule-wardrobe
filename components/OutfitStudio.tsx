@@ -213,7 +213,7 @@ export default function OutfitStudio({ items }: { items: WardrobeItem[] }) {
   // 合成搭配图预览（可拖动画布）；容器放宽到 630px ≈ 之前 max-w-md 的 140%
   if (composing) {
     return (
-      <div className="mx-auto max-w-[630px] py-8">
+      <div className="mx-auto max-w-[661px] py-8">
         <p className="mb-4 text-center text-[12px] tracking-[0.2em] text-muted">
           按住单品可拖动调整位置
         </p>
