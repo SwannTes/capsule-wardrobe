@@ -102,7 +102,7 @@ export default function OutfitCanvas({
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
-        className={`max-h-[60vh] max-w-full touch-none select-none ${
+        className={`max-h-[84vh] max-w-full touch-none select-none ${
           state ? "" : "invisible absolute"
         } ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
       />
