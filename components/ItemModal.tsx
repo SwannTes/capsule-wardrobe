@@ -200,8 +200,9 @@ export default function ItemModal({
           className="border border-line bg-card p-6"
           style={{ width: "min(92vw, 91vh)", aspectRatio: "1260 / 1280" }}
         >
-          <div className="flex h-full flex-row gap-4">
-            <div className="flex w-3/5 shrink-0 flex-col">
+          {/* 左列按主图实际宽度占位、右列吃掉剩余全部宽度，两列间距固定 10px */}
+          <div className="flex h-full flex-row gap-2.5">
+            <div className="flex shrink-0 flex-col">
               <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
                 <p className="font-serif-jp text-base">{item.name || "未命名单品"}</p>
                 {/* 主图高度用视口定值：flex 里写百分比会和 max-h-full 形成循环计算把高度撑爆；self-start 贴左，左边距≈原来一半 */}
@@ -241,7 +242,7 @@ export default function ItemModal({
             <button
               onClick={openPicker}
               disabled={uploading}
-              className={`flex h-full w-2/5 flex-col items-center justify-end transition-colors ${
+              className={`flex h-full min-w-0 flex-1 flex-col items-center justify-end transition-colors ${
                 uploading ? "opacity-40" : ""
               }`}
             >
