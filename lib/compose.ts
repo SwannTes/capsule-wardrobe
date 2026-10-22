@@ -8,8 +8,8 @@ import type { WardrobeItem } from "./types";
  * 供 OutfitCanvas 拖动后实时重绘；composeOutfitImage 是一次性出图。
  */
 
-/** 画布逻辑尺寸 1260×1280（宽高比 0.984，对齐日系杂志参考图白板比例后加宽 5%） */
-export const OUTFIT_W = 1260;
+/** 画布逻辑尺寸 504×1280（宽度减 60%，高度不变，窄条横幅比例） */
+export const OUTFIT_W = 504;
 export const OUTFIT_H = 1280;
 
 export type Placement = { x: number; y: number; w: number; h: number };
