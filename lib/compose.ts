@@ -94,7 +94,13 @@ export async function layoutOutfit(
     }
     return { x: fx * OUTFIT_W + (w - dw) / 2, y: fy * OUTFIT_H, w: dw, h: dh };
   });
-  return { imgs, placements };
+  // 单品按 200% 放大（围绕各自中心），用户可在画布里继续拖动调整
+  const enlarged = placements.map((p) => {
+    const w = p.w * 2;
+    const h = p.h * 2;
+    return { x: p.x - (w - p.w) / 2, y: p.y - (h - p.h) / 2, w, h };
+  });
+  return { imgs, placements: enlarged };
 }
 
 /** 按当前位置把单品画到画布上（白底 + 底部色点排） */
